@@ -48,18 +48,22 @@ class LoginController extends Controller
 
     public function handleProviderCallback($social){
         $userSocial = Socialite::driver($social)->user();
-        $user = User::where(['email' => $userSocial->getEmail(),'avatar' => $userSocial->getAvatar()])->first();
-        $user = User::select('avatar','id')->where('users.email',$userSocial->email)->get();
-        if ($user[0]['avatar']=='' || $user[0]['avatar']=!"0") {
-            if (User::find($user[0]['id'])) {
+        $user = User::where(['email' => $userSocial->getEmail()])->first();
+
+        if ($user) {
+            // usuário já  cadastrado, porém não possui avatar! Dar um updade campo avatar!
+            if ($user[0]['avatar']=="") {
+                $user = User::select('avatar','id')->where('users.email',$userSocial->email)->get();
+                if (User::find($user[0]['id']))
                 $user = User::find($user[0]['id']);
                 $user->avatar = $userSocial->getAvatar();
                 $user->save();
             }
             Auth::login($user);
-            return redirect()->action('HomeController@index');
+            return redirect()->route('home')->with('success',"Login realizado com sucesso, Seja Bem-Vindo!");
+            // se não possuir cadastro retorna a mensagem
         } else {
-            return view('auth.register',['name' => $userSocial->getName(),'email'=> $userSocial->getEmail(),'avatar' => $userSocial->getAvatar()]);
+            return redirect()->route('login')->with('error',"Seus dados, não confere aos nossos registros");
         }
     }
 }
