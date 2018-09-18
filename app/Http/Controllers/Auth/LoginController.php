@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -47,13 +48,18 @@ class LoginController extends Controller
 
     public function handleProviderCallback($social){
         $userSocial = Socialite::driver($social)->user();
-
-        $user = User::where(['email' => $userSocial->getEmail()])->first();
-        if ($user) {
+        $user = User::where(['email' => $userSocial->getEmail(),'avatar' => $userSocial->getAvatar()])->first();
+        $user = User::select('avatar','id')->where('users.email',$userSocial->email)->get();
+        if ($user[0]['avatar']=='' || $user[0]['avatar']=!"0") {
+            if (User::find($user[0]['id'])) {
+                $user = User::find($user[0]['id']);
+                $user->avatar = $userSocial->getAvatar();
+                $user->save();
+            }
             Auth::login($user);
             return redirect()->action('HomeController@index');
         } else {
-            return redirect()->route('login')->with('error','Dados não confere a nossa base de dados!');
+            return view('auth.register',['name' => $userSocial->getName(),'email'=> $userSocial->getEmail(),'avatar' => $userSocial->getAvatar()]);
         }
     }
 }

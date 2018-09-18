@@ -70,6 +70,23 @@
                                 </div>
                             </div>
 
+                            {{--<div class="form-group{{ $errors->has('avatar') ? ' has-error' : '' }}">--}}
+
+                                <div class="col-md-6">
+                                    @if(!empty($avatar))
+                                        <input type="hidden" id="avatar" name="avatar" value="{{ $avatar }}">
+                                    @else
+                                        <input type="hidden" id="avatar" name="avatar" value="{{ old('avatar') }}">
+                                    @endif
+
+                                    @if ($errors->has('avatar'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('avatar') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            {{--</div>--}}
+
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
