@@ -53,17 +53,17 @@ class LoginController extends Controller
         if ($user) {
             // usuário já  cadastrado, porém não possui avatar! Dar um updade campo avatar!
             if ($user[0]['avatar']=="") {
-                $user = User::select('avatar','id')->where('users.email',$userSocial->email)->get();
+                $user = User::select('avatar','id','name')->where('users.email',$userSocial->email)->get();
                 if (User::find($user[0]['id']))
                 $user = User::find($user[0]['id']);
                 $user->avatar = $userSocial->getAvatar();
                 $user->save();
             }
             Auth::login($user);
-            return redirect()->route('home')->with('success',"Login realizado com sucesso, Seja Bem-Vindo!");
+            return redirect()->route('home')->with('success',"Login realizado com sucesso, Seja Bem-Vindo, {$user->name}!");
             // se não possuir cadastro retorna a mensagem
         } else {
-            return redirect()->route('login')->with('error',"Seus dados, não confere aos nossos registros");
+            return redirect()->route('login')->with('error', "Seus dados, $userSocial->name, $userSocial->email , não confere aos nossos registros");
         }
     }
 }
