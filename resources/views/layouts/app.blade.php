@@ -12,6 +12,14 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="view-source:https://adminlte.io/themes/AdminLTE/pages/UI/buttons.html">
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/dist/css/AdminLTE.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset ("/bower_components/font-awesome/css/font-awesome.min.css") }}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ asset ("/bower_components/Ionicons/css/ionicons.min.css") }}">
+
 </head>
 <body>
     <div id="app">
